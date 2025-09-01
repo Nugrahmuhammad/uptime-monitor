@@ -2,7 +2,7 @@ name: Uptime Monitor
 
 on:
   schedule:
-    - cron: "*/5 * * * *" # cek setiap 5 menit
+    - cron: "*/5 * * * *" # cek tiap 5 menit
   workflow_dispatch:
 
 jobs:
@@ -16,25 +16,53 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install Upptime
-        run: npm install -g upptime
+      - name: Install dependencies
+        run: npm install axios
 
-      - name: Run Uptime Checks
-        id: uptime
+      - name: Check multiple URLs
+        id: check
         run: |
-          RESULT=$(npx upptime check-all || echo "down")
-          echo "status=$RESULT" >> $GITHUB_OUTPUT
+          echo "🔍 Checking websites..."
+          node <<'EOF'
+          const axios = require("axios");
+
+          const urls = [
+            { name: "CG", url: process.env.SECRET_API_URL },
+            { name: "Wikipedia", url: "https://en.wikipedia.org" },
+            { name: "Hacker News", url: "https://news.ycombinator.com" },
+            { name: "Test Broken Site", url: "https://thissitedoesnotexist.koj.co" }
+          ];
+
+          let downSites = [];
+
+          (async () => {
+            for (const site of urls) {
+              try {
+                const res = await axios.get(site.url, { timeout: 10000 });
+                if (res.status >= 200 && res.status < 400) {
+                  console.log(`✅ ${site.name} (${site.url}) is UP`);
+                } else {
+                  console.log(`🚨 ${site.name} (${site.url}) is DOWN (status ${res.status})`);
+                  downSites.push(`${site.name} (${site.url})`);
+                }
+              } catch (err) {
+                console.log(`🚨 ${site.name} (${site.url}) is DOWN (${err.message})`);
+                downSites.push(`${site.name} (${site.url})`);
+              }
+            }
+
+            if (downSites.length > 0) {
+              console.log("::set-output name=status::down");
+              console.log("::set-output name=downSites::" + downSites.join(", "));
+            }
+          })();
+          EOF
+        env:
+          SECRET_API_URL: ${{ secrets.SECRET_API_URL }}
 
       - name: Notify if down
-        if: failure()
+        if: steps.check.outputs.status == 'down'
         run: |
           curl -H "Content-Type: application/json" \
-            -d '{"content":"🚨 Beberapa website terdeteksi DOWN"}' \
-            ${{ secrets.DISCORD_WEBHOOK_URL }}
-
-      - name: Notify if up
-        if: success()
-        run: |
-          curl -H "Content-Type: application/json" \
-            -d '{"content":"✅ Semua website sudah UP kembali"}' \
+            -d "{\"content\":\"🚨 Website DOWN: ${{ steps.check.outputs.downSites }}\"}" \
             ${{ secrets.DISCORD_WEBHOOK_URL }}
