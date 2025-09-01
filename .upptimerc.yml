@@ -1,24 +1,27 @@
-# Change these first
 owner: Nugrahmuhammad
 repo: uptime-monitor
-
 
 sites:
   - name: CG
     url: ${{ secrets.SECRET_API_URL }}
+  - name: Wikipedia
+    url: https://en.wikipedia.org
+  - name: Hacker News
+    url: https://news.ycombinator.com
 
 status-website:
-  # cname: demo.upptime.js.org   <-- ini hapus kalau tidak pakai domain sendiri
-  baseUrl: /uptime-monitor       # pakai nama repo kamu
-  logoUrl: https://raw.githubusercontent.com/upptime/upptime.js.org/master/static/img/icon.svg
-  name: Uptime Monitor           # ganti nama sesuai keinginan
-  introTitle: "**Uptime Monitor** untuk proyek saya"
-  introMessage: Halaman status otomatis dari [repo GitHub](https://github.com/Nugrahmuhammad/uptime-monitor). Tidak perlu server tambahan — hanya Actions, Issues, dan Pages.
-  navbar:
-    - title: Status
-      href: /
-    - title: GitHub
-      href: https://github.com/Nugrahmuhammad/uptime-monitor
+  baseUrl: /
+  name: Uptime Monitor
+  introTitle: "📡 Status Layanan"
+  introMessage: "Monitoring otomatis menggunakan **Upptime**"
 
-# Upptime also supports notifications, assigning issues, and more
-# See https://upptime.js.org/docs/configuration
+notifications:
+  - type: discord
+    env:
+      NOTIFICATION_DISCORD: true
+      NOTIFICATION_DISCORD_WEBHOOK: true
+      NOTIFICATION_DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+env:
+  NOTIFICATIONS_DOWN_MESSAGE: "🚨 $SITE_NAME ($SITE_URL) DOWN! Code: $RESPONSE_CODE → $ISSUE_URL"
+  NOTIFICATIONS_UP_MESSAGE: "✅ $SITE_NAME sudah kembali normal."
