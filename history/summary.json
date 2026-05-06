@@ -16,7 +16,8 @@
     "timeMonth": 0,
     "timeYear": 0,
     "dailyMinutesDown": {
-      "2026-05-05": 105,
+      "2026-05-06": 89,
+      "2026-05-05": 1440,
       "2026-05-04": 1440,
       "2026-05-03": 1440,
       "2026-05-02": 1440,
@@ -271,15 +272,15 @@
     "icon": "https://icons.duckduckgo.com/ip3/en.wikipedia.org.ico",
     "slug": "wikipedia",
     "status": "up",
-    "uptime": "99.99%",
+    "uptime": "100.00%",
     "uptimeDay": "100.00%",
     "uptimeWeek": "100.00%",
     "uptimeMonth": "100.00%",
-    "uptimeYear": "99.99%",
+    "uptimeYear": "100.00%",
     "time": 220,
-    "timeDay": 233,
-    "timeWeek": 214,
-    "timeMonth": 166,
+    "timeDay": 232,
+    "timeWeek": 210,
+    "timeMonth": 170,
     "timeYear": 220,
     "dailyMinutesDown": {
       "2025-12-03": 18
@@ -296,11 +297,11 @@
     "uptimeWeek": "100.00%",
     "uptimeMonth": "100.00%",
     "uptimeYear": "100.00%",
-    "time": 302,
-    "timeDay": 255,
-    "timeWeek": 301,
+    "time": 303,
+    "timeDay": 435,
+    "timeWeek": 345,
     "timeMonth": 274,
-    "timeYear": 302,
+    "timeYear": 303,
     "dailyMinutesDown": {}
   }
 ]
